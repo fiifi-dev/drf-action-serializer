@@ -37,9 +37,11 @@ class ModelActionSerializer(ModelSerializer):
         if action_config:
             fields = action_config.get("fields", None)
             exclude = action_config.get("exclude", None)
+            depth = action_config.get("depth", None)
         else:
             fields = getattr(self.Meta, "fields", None)
             exclude = getattr(self.Meta, "exclude", None)
+            depth = getattr(self.Meta, "depth", None)
 
         if fields and fields != ALL_FIELDS and not isinstance(fields, (list, tuple)):
             raise TypeError(
@@ -51,6 +53,12 @@ class ModelActionSerializer(ModelSerializer):
             raise TypeError(
                 "The `exclude` option must be a list or tuple. Got %s."
                 % type(exclude).__name__
+            )
+
+        if depth and not isinstance(depth, (int,)):
+            raise TypeError(
+                "The `exclude` option must be an integer. Got %s."
+                % type(depth).__name__
             )
 
         assert not (fields and exclude), (
